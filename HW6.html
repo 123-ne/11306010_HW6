@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1A2B Game</title>
+</head>
+<body>
+    <h1>YourStudentID_HW6_1A2B</h1>
+
+
+    <label for="guess">Enter your guess (4 digits):</label>
+    	
+    <input type="text" id="guess" maxlength="4">
+    <button onclick="checkGuess()">Submit</button>
+    <div id="history">
+        <h3>Guess History:</h3>
+    </div>
+    <script>
+        // 隨機產生 4 位不重複數字
+        const generateRandomNumber = () => {
+        	//_：表示當前元素的值，這裡是 undefined i：表示當前元素的索引（從 0 開始）
+            const digits = Array.from({ length: 10 }, (_, i) => i.toString());
+            //[0] 的功能是從一個陣列中取出第一個元素。
+            return Array.from({ length: 4 }, () => digits.splice(Math.floor(Math.random() * digits.length), 1)[0]).join('');
+        };
+
+        const secretNumber = generateRandomNumber();
+        console.log(secretNumber); // 可在開發者工具中檢查答案
+
+        // 檢查玩家輸入
+        function checkGuess() {
+            const guess = document.getElementById('guess').value;
+            if (!/^\d{4}$/.test(guess) || new Set(guess).size !== 4) {
+                alert("請輸入 4 個不重複的數字！");
+                return;
+            }
+
+            let x = 0, y = 0;
+            for (let i = 0; i < 4; i++) {
+                if (guess[i] === secretNumber[i]) x++;
+                else if (secretNumber.includes(guess[i])) y++;
+            }
+
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML += `<p>${guess}: ${x}A${y}B</p>`;
+
+            if (x === 4) {
+                alert(`答對了！答案是 ${secretNumber}，共嘗試 ${historyDiv.querySelectorAll('p').length} 次。`);
+            }
+
+            document.getElementById('guess').value = ''; // 清空輸入欄位
+        }
+    </script>
+</body>
+</html>
